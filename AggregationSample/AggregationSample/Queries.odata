@@ -2,19 +2,25 @@ http://localhost:5000/odata/Orders
 
 http://localhost:5000/odata/Orders?$expand=Customer
 
-http://localhost:5000/odata/Orders?$apply=aggregate($count as OrdedersCount)
+http://localhost:5000/odata/Orders/$count
 
-http://localhost:5000/odata/Orders?$apply=aggregate($count as OrdedersCount, TotalAmount with sum as TotalAmount)
+http://localhost:5000/odata/Orders?$apply=aggregate($count as OrderCount)
 
-http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrdedersCount, TotalAmount with sum as TotalAmount))
+http://localhost:5000/odata/Orders?$apply=aggregate($count as OrderCount, TotalAmount with sum as TotalAmount, TotalAmount with average as AverageAmount)
+
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
 
 
 http://localhost:5000/odata/Orders?$apply=
     filter(Customer/HomeAddress/City eq 'Redonse')
-    /groupby((Customer/Name), aggregate($count as OrdedersCount, TotalAmount with sum as TotalAmount))
+    /groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
 
-http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrdedersCount, TotalAmount with sum as TotalAmount))
+    http://localhost:5000/odata/Orders?$apply=
+    groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
+    /filter(Customer/HomeAddress/City eq 'Redonse')
+
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
     /filter(TotalAmount gt 23)    
 
-http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrdedersCount, TotalAmount with sum as A))
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as A))
 &$orderby=A desc    
