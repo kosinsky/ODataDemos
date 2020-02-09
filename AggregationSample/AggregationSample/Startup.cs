@@ -43,7 +43,7 @@ namespace AggregationSample
 
             app.UseMvc(routeBuilder =>
             {
-                routeBuilder.Select().Filter().Expand();
+                routeBuilder.Select().Filter().Expand().MaxTop(int.MaxValue);
                 routeBuilder.MapODataServiceRoute("odata", "odata", GetEdmModel());
             });
         }

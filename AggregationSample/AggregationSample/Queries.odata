@@ -22,5 +22,14 @@ http://localhost:5000/odata/Orders?$apply=
 http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
     /filter(TotalAmount gt 23)    
 
-http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as A))
-&$orderby=A desc    
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as Total))&$orderby=Total desc    
+
+
+
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as Total))&$orderby=Total desc&$top=1
+
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate(TotalAmount with sum as Total))/aggregate(Total with max as MaxTotal)
+
+
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))&$filter=TotalAmount gt 23
+http://localhost:5000/odata/Orders?$filter=TotalAmount gt 23&$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))

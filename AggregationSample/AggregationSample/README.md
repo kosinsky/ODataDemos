@@ -218,11 +218,72 @@ http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($co
 It's important to always remember order of transformation or we could get unexpected results. If we try to aggregate first and then try to filter by customers' city:
 
 ```OData
-    http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))/filter(Customer/HomeAddress/City eq 'Redonse')
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))/filter(Customer/HomeAddress/City eq 'Redonse')
 ```
 we will get error **The query specified in the URI is not valid. $apply/groupby grouping expression 'City' must evaluate to a property access value.**.  It happens because after we applied groupby transformation we have access only to properties from groupby and aggregate.  
 
 ### $apply and other query options
+
+```$apply``` is yet another query option and can be combine with others. It's important to remember that $apply evaluated [first](http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016590). It means that all dynamic properties introduced in the ```$apply``` will be available for later query options, however, properties that aren't part of ```groupby``` or ```aggregate``` will be gone.
+
+To get customers ordered by total amount you could use following query:
+```OData
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as Total)&$orderby=Total desc
+```
+and get TOP N customers:
+```OData
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as Total)&$orderby=Total desc&$top=1
+```
+
+Result will look like
+```JSON
+{
+    "@odata.context": "http://localhost:5000/odata/$metadata#Orders(Customer(Name),OrderCount,Total)",
+    "value": [
+        {
+            "@odata.id": null,
+            "Total": 45,
+            "OrderCount": 2,
+            "Customer": {
+                "@odata.id": null,
+                "Name": "Chilly"
+            }
+        }
+    ]
+}
+```
+> Note: If you kst looking for top total, you could use additional ```aggregate``` after ```groupby```:
+> ```OData
+> http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate(TotalAmount with sum as Total))/aggregate(Total with max as MaxTotal)
+>```
+> Output will look like:
+> ```JSON
+>{
+>   "@odata.context": "http://localhost:5000/odata/$metadata#Orders(MaxTotal)",
+>   "value": [
+>       {
+>           "@odata.id": null,
+>           "MaxTotal": 45
+>       }
+>   ]
+>}
+> ```
+
+Using ```$filter``` after ```$apply``` is the same as final ```filter()```transformation. Following 3 queries are equal:
+
+```OData
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))/filter(TotalAmount gt 23)   
+```
+
+```OData
+http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))&$filter=TotalAmount gt 23
+```
+*$apply evaluated first not matter in which order it was specified in the query*
+```OData
+http://localhost:5000/odata/Orders?$filter=TotalAmount gt 23&$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
+```
+
+
 
 # Query providers
 
