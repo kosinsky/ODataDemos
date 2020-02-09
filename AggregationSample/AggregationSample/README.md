@@ -1,4 +1,3 @@
-# Intro
 OData v4.0 specification includes an aggregation extensions that allows not only extract data that your really need, but execute server-side aggregations.
 
 Basic support for aggregation extension was added into ASP.NET OData v7.0 and extended with each new version.
