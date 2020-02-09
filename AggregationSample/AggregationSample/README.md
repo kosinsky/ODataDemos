@@ -293,5 +293,5 @@ In this tutorial we are used Linq to objects, where all transformations will hap
 | EF Core 2.1    | .NET Classic, .NET Core | Aggregation will be executed client side in memory |
 | EF Core 3.0/3.1    | .NET Core 3.0+, .NET Classic (for EF Core 3.1) | Aggregations will be translated to SQL and executed as single SQL query. However, not all expressions are supported |
 
-
 # Summary
+```$apply``` is powerful way to extend OData endpoint and minimize amount of data that transferred between a service and a client for reporting and analytical scenarios.
