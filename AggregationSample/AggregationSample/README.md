@@ -161,7 +161,7 @@ and get following response:
 ```
 Please, note that we are using ```Customer/Name``` to access properties from related entities in the same way as we are doing it in ```$filter``` and getting properties from Customer entity as nested JSON in the same way as we will get them while using ```$expand```
 
-> Trick: If we use ```groupby``` without aggregation we could get distinct customer names ```http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name))```
+> **Trick:** If we use ```groupby``` without aggregation we could get distinct customer names ```http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name))```
 
 ## filter transformation
 We are calling ```groupby``` and ```aggregate``` transformations, however used only one transformation per query. $apply allows to combine multiple transformations to get desired output.
@@ -252,7 +252,7 @@ Result will look like
     ]
 }
 ```
-> Trick: If you kst looking for top total, you could use additional ```aggregate``` after ```groupby```:
+> **Trick:** If you kst looking for top total, you could use additional ```aggregate``` after ```groupby```:
 > ```OData
 > http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate(TotalAmount with sum as Total))/aggregate(Total with max as MaxTotal)
 >```
