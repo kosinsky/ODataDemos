@@ -283,8 +283,15 @@ http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($co
 http://localhost:5000/odata/Orders?$filter=TotalAmount gt 23&$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
 ```
 
-
-
 # Query providers
+In this tutorial we are used Linq to objects, where all transformations will happen in memory. In real applications, you will use more advanced query provider (concrete implementation of IQueryable) that will talk to some database and storage. Capabilities and performance of queries could be affected by chosen query provider:
+
+| Query provider | .NET Core or Classic | Notes |
+| ---------------| -------------------| ----|
+| EF6            | .NET Classic, .NET Core 3.0+ | Aggregation will be translated to SQL and executed as single SQL query |
+| EF Core 1.0    | .NET Classic, .NET Core | Aggregations not supported |
+| EF Core 2.1    | .NET Classic, .NET Core | Aggregation will be executed client side in memory |
+| EF Core 3.0/3.1    | .NET Core 3.0+, .NET Classic (for EF Core 3.1) | Aggregations will be translated to SQL and executed as single SQL query. However, not all expressions are supported |
+
 
 # Summary
