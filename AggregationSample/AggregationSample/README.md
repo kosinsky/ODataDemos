@@ -1,12 +1,18 @@
-OData v4.0 specification includes an aggregation extensions that allows not only extract data that your really need, but execute server-side aggregations.
+```$select```  and ```$filter``` as well as other OData query options are good way to receive only data that your really need. However, they might be not the best option for reporting and analytical applications. If you want to get total sales to the particular customer and using only ```$select``` and ```$filter```, you end up selecting all orders and doing aggregation client-side. This approach could mean sending a lot of data over the network. If you need to show sales by region, product category etc, you have to send almost all data.
 
-Basic support for aggregation extension was added into ASP.NET OData v7.0 and extended with each new version.
-This tutorial assumes that you already have the knowledge to build an ASP.NET Core Web Application service using ASP.NET Core OData NuGget package. If not, start by reading ASP.NET Core OData now Available and refer to the [sample project](https://github.com/kosinsky/ODataDemos/tree/master/AggregationSample) used in this article.
+Fortunately, OData v4.0 specification includes an [aggregation extensions](http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/odata-data-aggregation-ext-v4.0.html) which allows aggregations server-side and respond to a client with just a few numbers. It introduces new query option ```$apply```. We going to show how to use ut.
+
+Basic support for aggregation extensions was added into ASP.NET OData v7.0 and extended with each new version.
+
+This tutorial assumes that you already have the knowledge to build an ASP.NET Core Web Application service using ASP.NET Core OData NuGget package. If not, start by reading [ASP.NET Core OData now Available](https://devblogs.microsoft.com/odata/asp-net-core-odata-now-available/) and adding Data Model and controllers as described below. 
+
+You could use [sample project](https://github.com/kosinsky/ODataDemos/tree/master/AggregationSample) to try all queries from this article.
+
 Let’s get started.
 
 
 # Data Model
-We aren't going to build project from scratch. Please, refer to [ASP.NET Core OData now Available](https://devblogs.microsoft.com/odta/asp-net-core-odata-now-available/) if you need detailed steps how to create OData application.
+As mentioned, we aren't going to build project from scratch. Please, refer to [ASP.NET Core OData now Available](https://devblogs.microsoft.com/odta/asp-net-core-odata-now-available/) if you need detailed steps how to create OData application.
 
 As are data model we are going to ue following CLR classes:
 
@@ -78,6 +84,8 @@ public class CustomersController : ODataController
 ```
 that will allow to have two OData entity sets that we are going to query:
 ```http://localhost:5000/odata/Orders``` and ```http://localhost:5000/odata/Customers```
+
+Now we ready to try few aggregation queries.You don't need to do anything specific to enable ```$apply``` query option.
 
 # $apply
 $apply query option allows to specify a sequence of transformations to the entity set such as ```groupby```, ```filter```, ```aggregate``` etc.
