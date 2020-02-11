@@ -6,7 +6,7 @@ Let’s get started.
 
 
 # Data Model
-We aren't going to build project from scratch. Please, refer to [ASP.ET Core OData now Available](https://devblogs.microsoft.com/odta/asp-net-core-odata-now-available/) if you need sta.
+We aren't going to build project from scratch. Please, refer to [ASP.NET Core OData now Available](https://devblogs.microsoft.com/odta/asp-net-core-odata-now-available/) if you need detailed steps how to create OData application.
 
 As are data model we are going to ue following CLR classes:
 
@@ -77,7 +77,7 @@ public class CustomersController : ODataController
 
 ```
 that will allow to have two OData entity sets that we are going to query:
-```http://localhost:5000/odata/Orders``` and ```http://localhost:5000/odata/Customer```
+```http://localhost:5000/odata/Orders``` and ```http://localhost:5000/odata/Customers```
 
 # $apply
 $apply query option allows to specify a sequence of transformations to the entity set such as ```groupby```, ```filter```, ```aggregate``` etc.
@@ -251,7 +251,7 @@ Result will look like
     ]
 }
 ```
-> **Trick:** If you kst looking for top total, you could use additional ```aggregate``` after ```groupby```:
+> **Trick:** If you just looking for top total, you could use additional ```aggregate``` after ```groupby```:
 > ```OData
 > http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate(TotalAmount with sum as Total))/aggregate(Total with max as MaxTotal)
 >```
@@ -277,10 +277,11 @@ http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($co
 ```OData
 http://localhost:5000/odata/Orders?$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))&$filter=TotalAmount gt 23
 ```
-*$apply evaluated first not matter in which order it was specified in the query*
+
 ```OData
 http://localhost:5000/odata/Orders?$filter=TotalAmount gt 23&$apply=groupby((Customer/Name), aggregate($count as OrderCount, TotalAmount with sum as TotalAmount))
 ```
+*```$apply``` evaluated first no matter in which order it was specified in the query options*
 
 # Query providers
 In this tutorial we are used Linq to objects, where all transformations will happen in memory. In real applications, you will use more advanced query provider (concrete implementation of IQueryable) that will talk to some database and storage. Capabilities and performance of queries could be affected by chosen query provider:
